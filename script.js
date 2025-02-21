@@ -4,6 +4,22 @@ const dictionary = [
     'hello', 'world', 'javascript',
     'university', 'student', 'programming'
 ];
+let wordList = [];
+
+// 加载单词库
+fetch('existing.json')
+  .then(response => response.json())
+  .then(data => {
+    wordList = data.words; // 将单词存储到数组中
+    console.log('单词库加载成功:', wordList.length, '个单词');
+  })
+  .catch(error => {
+    console.error('加载单词库失败:', error);
+  });
+
+function checkSpelling(input) {
+  return wordList.includes(input.toLowerCase()); // 检查输入单词是否在单词库中
+}
 
 function checkSpelling(input, target) {
     if (input === target) {
