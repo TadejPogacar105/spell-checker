@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<script>
+  const segment = 1; // 若项目部署在仓库根目录（如 `username.github.io`），设为 0；若在子目录（如 `username.github.io/repo`），设为 1
+  const path = location.pathname.split('/').slice(segment).join('/');
+  location.replace(location.origin + (segment ? 'spell-checker' : '') + '/index.html#' + path);
+</script>
