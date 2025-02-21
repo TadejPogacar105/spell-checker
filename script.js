@@ -30,6 +30,11 @@ function checkSpelling(input, target) {
         return similarity >= 0.8; // 相似度阈值
     }
 }
+function checkWord() {
+  const input = document.getElementById("wordInput").value;
+  displayFeedback(input);
+}
+
 
 function levenshteinDistance(a, b) {
     if (a.length === 0) return b.length;
