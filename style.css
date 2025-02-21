@@ -1,39 +1,47 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
+  /* 基础背景设置 */
+  background-image: linear-gradient(
+      rgba(40, 40, 40, 0.85), /* 深色遮罩层 */
+      rgba(25, 25, 25, 0.9)
+    ),
+    url('your-background.jpg'); /* 替换为你的图片路径 */
+  
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* 实现视差效果 */
+  min-height: 100vh;
 }
 
+/* 主文字颜色 */
+body {
+  color: #e0e0e0; /* 浅灰色 */
+  line-height: 1.6;
+}
+
+/* 标题渐变效果 */
+h1, h2 {
+  background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 链接交互效果 */
+a {
+  color: #63a4ff;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #1976d2;
+  text-shadow: 0 0 8px rgba(25, 118, 210, 0.3);
+}
 .container {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-input {
-    padding: 8px;
-    margin-right: 10px;
-    width: 200px;
-}
-
-button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-#result {
-    margin-top: 15px;
-    font-weight: bold;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px); /* 毛玻璃效果 */
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
