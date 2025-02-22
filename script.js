@@ -22,7 +22,7 @@ function checkSpelling() {
 
     // 如果单词在词典中，直接判定为正确
     if (dictionary.includes(wordInput)) {
-        resultElement.textContent = `"${wordInput}" 拼写正确！`;
+        resultElement.textContent = `"${wordInput}" 嘿还真让你蒙着了！`;
         resultElement.style.color = 'green';
         return;
     }
@@ -36,7 +36,7 @@ function checkSpelling() {
         resultElement.textContent = `"${wordInput}" 拼写错误，您是否想输入 "${closestWord}"？`;
         resultElement.style.color = 'orange';
     } else {
-        resultElement.textContent = `"${wordInput}" 拼写错误或不在词典中。`;
+        resultElement.textContent = `"${wordInput}" 拼的什么玩意这是！`;
         resultElement.style.color = 'red';
     }
 }
