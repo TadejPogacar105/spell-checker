@@ -24,7 +24,7 @@ function checkSpelling() {
     const matchedWord = dictionary.find(entry => entry.word === wordInput);
 
     if (matchedWord) {
-        resultElement.textContent = `${wordInput} 拼写正确！释义：${matchedWord.definition}`;
+        resultElement.textContent = `"${wordInput}" 拼写正确！释义："${matchedWord.definition}"`;
         resultElement.style.color = 'green';
         return;
     }
@@ -35,10 +35,10 @@ function checkSpelling() {
 
     // 如果编辑距离较小，提示可能的正确拼写
     if (distance <= 2) { // 编辑距离阈值，可以根据需要调整
-        resultElement.textContent = `${wordInput} 拼写错误，您是否想输入 ${closestWord}？`;
+        resultElement.textContent = `"${wordInput}" 拼写错误，您是否想输入" ${closestWord}"？`;
         resultElement.style.color = 'orange';
     } else {
-        resultElement.textContent = `${wordInput} 拼写错误或不在词典中。`;
+        resultElement.textContent = `"${wordInput}" 拼写错误或不在词典中。`;
         resultElement.style.color = 'red';
     }
 }
