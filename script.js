@@ -21,14 +21,16 @@ function checkSpelling() {
     const resultElement = document.getElementById('result');
 
     // 如果单词在词典中，直接判定为正确
-    if (dictionary.includes(wordInput)) {
-        resultElement.textContent = `"${wordInput}" 嘿还真让你蒙着了！`;
+    const matchedWord = dictionary.find(entry => entry.word === wordInput);
+
+    if (matchedWord) {
+        resultElement.textContent = `"${wordInput}" 拼写正确！释义：${matchedWord.definition}`;
         resultElement.style.color = 'green';
         return;
     }
 
     // 否则，查找最接近的单词
-    const closestWord = findClosestWord(wordInput, dictionary);
+    const closestWord = findClosestWord(wordInput, dictionary.map(entry => entry.word));
     const distance = levenshteinDistance(wordInput, closestWord);
 
     // 如果编辑距离较小，提示可能的正确拼写
@@ -36,7 +38,7 @@ function checkSpelling() {
         resultElement.textContent = `"${wordInput}" 拼写错误，您是否想输入 "${closestWord}"？`;
         resultElement.style.color = 'orange';
     } else {
-        resultElement.textContent = `"${wordInput}" 拼的什么玩意这是！`;
+        resultElement.textContent = `"${wordInput}" 拼写错误或不在词典中。`;
         resultElement.style.color = 'red';
     }
 }
@@ -66,11 +68,11 @@ function levenshteinDistance(word1, word2) {
 }
 
 // 查找词典中最接近的单词
-function findClosestWord(inputWord, dictionary) {
+function findClosestWord(inputWord, wordList) {
     let closestWord = '';
     let minDistance = Infinity;
 
-    for (const word of dictionary) {
+    for (const word of wordList) {
         const distance = levenshteinDistance(inputWord, word);
         if (distance < minDistance) {
             minDistance = distance;
