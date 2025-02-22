@@ -1,71 +1,81 @@
-// 简易单词库（后续可替换为API）
-const dictionary = [
-    'apple', 'banana', 'computer', 
-    'hello', 'world', 'javascript',
-    'university', 'student', 'programming'
-];
-let wordList = [];
+let dictionary = []; // 用于存储从 JSON 文件加载的词典
 
-// 加载单词库
-fetch('existing.json')
-  .then(response => response.json())
-  .then(data => {
-    wordList = data.words; // 将单词存储到数组中
-    console.log('单词库加载成功:', wordList.length, '个单词');
-  })
-  .catch(error => {
-    console.error('加载单词库失败:', error);
-  });
-
-function checkSpelling(input) {
-  return wordList.includes(input.toLowerCase()); // 检查输入单词是否在单词库中
+// 加载词典
+async function loadDictionary() {
+    try {
+        const response = await fetch('dictionary.json');
+        if (!response.ok) {
+            throw new Error('无法加载词典文件');
+        }
+        dictionary = await response.json();
+    } catch (error) {
+        console.error('加载词典时出错:', error);
+    }
 }
 
-function checkSpelling(input, target) {
-    if (input === target) {
-        return true; // 拼写正确
+// 初始化：加载词典
+loadDictionary();
+
+function checkSpelling() {
+    const wordInput = document.getElementById('wordInput').value.toLowerCase();
+    const resultElement = document.getElementById('result');
+
+    // 如果单词在词典中，直接判定为正确
+    if (dictionary.includes(wordInput)) {
+        resultElement.textContent = `"${wordInput}" 拼写正确！`;
+        resultElement.style.color = 'green';
+        return;
+    }
+
+    // 否则，查找最接近的单词
+    const closestWord = findClosestWord(wordInput, dictionary);
+    const distance = levenshteinDistance(wordInput, closestWord);
+
+    // 如果编辑距离较小，提示可能的正确拼写
+    if (distance <= 2) { // 编辑距离阈值，可以根据需要调整
+        resultElement.textContent = `"${wordInput}" 拼写错误，您是否想输入 "${closestWord}"？`;
+        resultElement.style.color = 'orange';
     } else {
-        const distance = levenshteinDistance(input, target);
-        const similarity = 1 - distance / Math.max(input.length, target.length);
-        return similarity >= 0.8; // 相似度阈值
+        resultElement.textContent = `"${wordInput}" 拼写错误或不在词典中。`;
+        resultElement.style.color = 'red';
     }
 }
-function checkWord() {
-  const input = document.getElementById("wordInput").value;
-  displayFeedback(input);
-}
 
+// 计算编辑距离（Levenshtein Distance）
+function levenshteinDistance(word1, word2) {
+    const m = word1.length;
+    const n = word2.length;
+    const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
-function levenshteinDistance(a, b) {
-    if (a.length === 0) return b.length;
-    if (b.length === 0) return a.length;
-    const matrix = [];
-    for (let i = 0; i <= b.length; i++) {
-        matrix[i] = [i];
-    }
-    for (let j = 0; j <= a.length; j++) {
-        matrix[0][j] = j;
-    }
-    for (let i = 1; i <= b.length; i++) {
-        for (let j = 1; j <= a.length; j++) {
-            if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                matrix[i][j] = matrix[i - 1][j - 1];
+    for (let i = 0; i <= m; i++) {
+        for (let j = 0; j <= n; j++) {
+            if (i === 0) {
+                dp[i][j] = j;
+            } else if (j === 0) {
+                dp[i][j] = i;
             } else {
-                matrix[i][j] = Math.min(
-                    matrix[i - 1][j - 1] + 1,
-                    matrix[i][j - 1] + 1,
-                    matrix[i - 1][j] + 1
+                dp[i][j] = Math.min(
+                    dp[i - 1][j] + 1, // 删除
+                    dp[i][j - 1] + 1, // 插入
+                    dp[i - 1][j - 1] + (word1[i - 1] !== word2[j - 1] ? 1 : 0) // 替换
                 );
             }
         }
     }
-    return matrix[b.length][a.length];
+    return dp[m][n];
 }
-function displayFeedback(input, target) {
-    const feedbackElement = document.getElementById("feedback");
-    if (checkSpelling(input, target)) {
-        feedbackElement.innerText = "嘿还真让你蒙着了！";
-    } else {
-        feedbackElement.innerText = "Shit！What the hell is this！";
+
+// 查找词典中最接近的单词
+function findClosestWord(inputWord, dictionary) {
+    let closestWord = '';
+    let minDistance = Infinity;
+
+    for (const word of dictionary) {
+        const distance = levenshteinDistance(inputWord, word);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestWord = word;
+        }
     }
+    return closestWord;
 }
